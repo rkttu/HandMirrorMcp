@@ -2,12 +2,12 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "description": "A Model Context Protocol (MCP) server for .NET assembly and NuGet package inspection. Helps AI coding agents understand .NET APIs accurately and resolve build errors.",
   "name": "io.github.rkttu/HandMirrorMcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packages": [
     {
       "registryType": "nuget",
       "identifier": "HandMirrorMcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": {
         "type": "stdio"
       },
