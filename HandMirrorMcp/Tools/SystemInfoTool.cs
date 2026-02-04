@@ -208,7 +208,7 @@ public sealed class SystemInfoTool
         // Run dotnet --list-sdks
         try
         {
-            var sdksOutput = await RunDotNetCommandAsync("--list-sdks", cancellationToken);
+            var sdksOutput = await RunDotNetCommandAsync("--list-sdks", cancellationToken).ConfigureAwait(false);
             sb.AppendLine(Emoji.Package + $" Installed SDKs:");
             sb.AppendLine(new string('-', 60));
             if (string.IsNullOrWhiteSpace(sdksOutput))
@@ -233,7 +233,7 @@ public sealed class SystemInfoTool
         // Run dotnet --list-runtimes
         try
         {
-            var runtimesOutput = await RunDotNetCommandAsync("--list-runtimes", cancellationToken);
+            var runtimesOutput = await RunDotNetCommandAsync("--list-runtimes", cancellationToken).ConfigureAwait(false);
             sb.AppendLine(Emoji.Gear + $" Installed Runtimes:");
             sb.AppendLine(new string('-', 60));
             if (string.IsNullOrWhiteSpace(runtimesOutput))
@@ -271,7 +271,7 @@ public sealed class SystemInfoTool
         // Run dotnet --info for additional details
         try
         {
-            var infoOutput = await RunDotNetCommandAsync("--info", cancellationToken);
+            var infoOutput = await RunDotNetCommandAsync("--info", cancellationToken).ConfigureAwait(false);
             
             // Extract host and commit info
             var lines = infoOutput.Split('\n');
@@ -514,8 +514,8 @@ public sealed class SystemInfoTool
 
         process.Start();
 
-        var output = await process.StandardOutput.ReadToEndAsync(cancellationToken);
-        await process.WaitForExitAsync(cancellationToken);
+        var output = await process.StandardOutput.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+        await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
 
         return output;
     }

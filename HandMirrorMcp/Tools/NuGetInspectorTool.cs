@@ -58,7 +58,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
         try
         {
             var packages = await _nugetService.SearchPackagesAsync(
-                searchTerm, includePrerelease, 0, maxResults, cancellationToken);
+                searchTerm, includePrerelease, 0, maxResults, cancellationToken).ConfigureAwait(false);
 
             var packageList = packages.ToList();
 
@@ -107,7 +107,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
         try
         {
             var versions = await _nugetService.GetPackageVersionsAsync(
-                packageId, includePrerelease, cancellationToken);
+                packageId, includePrerelease, cancellationToken).ConfigureAwait(false);
 
             var versionList = versions.ToList();
 
@@ -160,7 +160,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             }
 
             var metadata = await _nugetService.GetPackageMetadataAsync(
-                packageId, nugetVersion, cancellationToken);
+                packageId, nugetVersion, cancellationToken).ConfigureAwait(false);
 
             if (metadata == null)
             {
@@ -239,7 +239,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -250,7 +250,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -261,7 +261,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Get assembly list
             var assemblies = await _nugetService.GetPackageAssembliesAsync(
-                packagePath, targetFramework, cancellationToken);
+                packagePath, targetFramework, cancellationToken).ConfigureAwait(false);
 
             var assemblyList = assemblies.ToList();
 
@@ -363,7 +363,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -374,7 +374,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -385,7 +385,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Find type in assemblies
             var assemblies = await _nugetService.GetPackageAssembliesAsync(
-                packagePath, targetFramework, cancellationToken);
+                packagePath, targetFramework, cancellationToken).ConfigureAwait(false);
 
             foreach (var assemblyPath in assemblies)
             {
@@ -442,7 +442,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -453,7 +453,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -464,7 +464,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Get all assembly info
             var assemblyInfo = await _nugetService.GetAllPackageAssembliesAsync(
-                packagePath, cancellationToken);
+                packagePath, cancellationToken).ConfigureAwait(false);
 
             if (!assemblyInfo.HasAnyAssemblies)
             {
@@ -586,7 +586,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -597,7 +597,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -980,7 +980,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -991,7 +991,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -1180,7 +1180,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -1191,7 +1191,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -1305,7 +1305,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -1316,7 +1316,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -1472,7 +1472,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -1483,7 +1483,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -1541,7 +1541,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             sb.AppendLine(new string('=', 80));
             sb.AppendLine();
 
-            var lines = await File.ReadAllLinesAsync(fullPath, cancellationToken);
+            var lines = await File.ReadAllLinesAsync(fullPath, cancellationToken).ConfigureAwait(false);
             var totalLines = lines.Length;
             var displayLines = maxLines > 0 ? Math.Min(maxLines, totalLines) : totalLines;
 
@@ -1729,7 +1729,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -1740,7 +1740,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -2120,8 +2120,8 @@ public sealed partial class NuGetInspectorTool : IDisposable
             }
 
             // Download both versions
-            var fromResult = await _nugetService.DownloadPackageAsync(packageId, fromNuGetVersion, cancellationToken);
-            var toResult = await _nugetService.DownloadPackageAsync(packageId, toNuGetVersion, cancellationToken);
+            var fromResult = await _nugetService.DownloadPackageAsync(packageId, fromNuGetVersion, cancellationToken).ConfigureAwait(false);
+            var toResult = await _nugetService.DownloadPackageAsync(packageId, toNuGetVersion, cancellationToken).ConfigureAwait(false);
 
             if (!fromResult.IsSuccess)
             {
@@ -2137,8 +2137,8 @@ public sealed partial class NuGetInspectorTool : IDisposable
             var toPath = toResult.Path!;
 
             // Get assemblies
-            var fromAssemblies = (await _nugetService.GetPackageAssembliesAsync(fromPath, targetFramework, cancellationToken)).ToList();
-            var toAssemblies = (await _nugetService.GetPackageAssembliesAsync(toPath, targetFramework, cancellationToken)).ToList();
+            var fromAssemblies = (await _nugetService.GetPackageAssembliesAsync(fromPath, targetFramework, cancellationToken).ConfigureAwait(false)).ToList();
+            var toAssemblies = (await _nugetService.GetPackageAssembliesAsync(toPath, targetFramework, cancellationToken).ConfigureAwait(false)).ToList();
 
             if (fromAssemblies.Count == 0)
             {
@@ -2421,7 +2421,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -2431,7 +2431,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             }
 
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -2441,7 +2441,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             var packagePath = downloadResult.Path!;
 
             var assemblies = await _nugetService.GetPackageAssembliesAsync(
-                packagePath, targetFramework, cancellationToken);
+                packagePath, targetFramework, cancellationToken).ConfigureAwait(false);
 
             // Convert wildcard pattern to regex
             var regexPattern = "^" + System.Text.RegularExpressions.Regex.Escape(pattern)
@@ -2585,7 +2585,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -2608,7 +2608,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             await BuildDependencyTreeAsync(
                 packageId, packageVersion, targetFramework,
-                0, maxDepth, visited, allPackages, conflicts, sb, cancellationToken);
+                0, maxDepth, visited, allPackages, conflicts, sb, cancellationToken).ConfigureAwait(false);
 
             // Summary
             sb.AppendLine();
@@ -2708,7 +2708,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
         // Get metadata
         try
         {
-            var metadata = await _nugetService.GetPackageMetadataAsync(packageId, version, cancellationToken);
+            var metadata = await _nugetService.GetPackageMetadataAsync(packageId, version, cancellationToken).ConfigureAwait(false);
 
             if (metadata?.DependencySets == null)
                 return;
@@ -2729,7 +2729,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
                 await BuildDependencyTreeAsync(
                     dep.Id, depVersion, targetFramework,
-                    depth + 1, maxDepth, visited, allPackages, conflicts, sb, cancellationToken);
+                    depth + 1, maxDepth, visited, allPackages, conflicts, sb, cancellationToken).ConfigureAwait(false);
             }
         }
         catch
@@ -2794,7 +2794,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -2804,7 +2804,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             }
 
             var metadata = await _nugetService.GetPackageMetadataAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (metadata == null)
             {
@@ -2859,7 +2859,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package and check license files
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             string? packagePath = downloadResult.IsSuccess ? downloadResult.Path : null;
 
@@ -2880,7 +2880,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
                         // Display file content (first 50 lines)
                         if (!IsBinaryFile(filePath))
                         {
-                            var lines = await File.ReadAllLinesAsync(filePath, cancellationToken);
+                            var lines = await File.ReadAllLinesAsync(filePath, cancellationToken).ConfigureAwait(false);
                             sb.AppendLine();
 
                             var displayLines = Math.Min(50, lines.Length);
@@ -2913,7 +2913,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
                         if (!IsBinaryFile(filePath))
                         {
-                            var content = await File.ReadAllTextAsync(filePath, cancellationToken);
+                            var content = await File.ReadAllTextAsync(filePath, cancellationToken).ConfigureAwait(false);
                             var lines = content.Split('\n');
                             var displayLines = Math.Min(30, lines.Length);
 
@@ -3168,7 +3168,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -3179,7 +3179,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
 
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -3455,7 +3455,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -3471,7 +3471,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Download package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (!downloadResult.IsSuccess)
             {
@@ -3482,10 +3482,10 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Get package metadata
             var metadata = await _nugetService.GetPackageMetadataAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             // Analyze supported TFMs
-            var assemblyInfo = await _nugetService.GetAllPackageAssembliesAsync(packagePath, cancellationToken);
+            var assemblyInfo = await _nugetService.GetAllPackageAssembliesAsync(packagePath, cancellationToken).ConfigureAwait(false);
             var supportedTfms = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (var tfm in assemblyInfo.LibAssemblies.Keys)
@@ -3874,20 +3874,20 @@ public sealed partial class NuGetInspectorTool : IDisposable
                     try
                     {
                         var versions = await _nugetService.GetPackageVersionsAsync(
-                            possibleName, includePrerelease: false, cancellationToken);
+                            possibleName, includePrerelease: false, cancellationToken).ConfigureAwait(false);
 
                         var latestVersion = versions.FirstOrDefault();
                         if (latestVersion != null)
                         {
                             // Check type in package
                             var downloadResult = await _nugetService.DownloadPackageAsync(
-                                possibleName, latestVersion, cancellationToken);
+                                possibleName, latestVersion, cancellationToken).ConfigureAwait(false);
 
                             if (downloadResult.IsSuccess)
                             {
                                 var packagePath = downloadResult.Path!;
                                 var assemblies = await _nugetService.GetPackageAssembliesAsync(
-                                    packagePath, null, cancellationToken);
+                                    packagePath, null, cancellationToken).ConfigureAwait(false);
 
                                 foreach (var assemblyPath in assemblies)
                                 {
@@ -3944,7 +3944,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
                 try
                 {
                     var packages = await _nugetService.SearchPackagesAsync(
-                        searchTerm, includePrerelease: false, 0, maxPackagesToSearch, cancellationToken);
+                        searchTerm, includePrerelease: false, 0, maxPackagesToSearch, cancellationToken).ConfigureAwait(false);
 
                     foreach (var package in packages)
                     {
@@ -3956,13 +3956,13 @@ public sealed partial class NuGetInspectorTool : IDisposable
                         try
                         {
                             var downloadResult = await _nugetService.DownloadPackageAsync(
-                                package.Identity.Id, package.Identity.Version, cancellationToken);
+                                package.Identity.Id, package.Identity.Version, cancellationToken).ConfigureAwait(false);
 
                             if (!downloadResult.IsSuccess) continue;
 
                             var packagePath = downloadResult.Path!;
                             var assemblies = await _nugetService.GetPackageAssembliesAsync(
-                                packagePath, null, cancellationToken);
+                                packagePath, null, cancellationToken).ConfigureAwait(false);
 
                             foreach (var assemblyPath in assemblies)
                             {
@@ -4219,7 +4219,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -4234,7 +4234,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // 1. Check CHANGELOG file in package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             string? packagePath = downloadResult.IsSuccess ? downloadResult.Path : null;
 
@@ -4250,7 +4250,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
                     sb.AppendLine(new string('-', 60));
                     sb.AppendLine();
 
-                    var lines = await File.ReadAllLinesAsync(changelogFile, cancellationToken);
+                    var lines = await File.ReadAllLinesAsync(changelogFile, cancellationToken).ConfigureAwait(false);
                     var displayLines = maxLines > 0 ? Math.Min(maxLines, lines.Length) : lines.Length;
 
                     for (int i = 0; i < displayLines; i++)
@@ -4270,7 +4270,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // 2. Check Release Notes in package metadata
             var metadata = await _nugetService.GetPackageMetadataAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (metadata != null)
             {
@@ -4300,7 +4300,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
                 if (repoInfo?.Type == RepositoryType.GitHub)
                 {
                     var releases = await _repoService.GetGitHubReleasesAsync(
-                        repoInfo.Owner, repoInfo.Name, 10, cancellationToken);
+                        repoInfo.Owner, repoInfo.Name, 10, cancellationToken).ConfigureAwait(false);
 
                     if (releases != null && releases.Count > 0)
                     {
@@ -4438,7 +4438,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             else
             {
                 var versions = await _nugetService.GetPackageVersionsAsync(
-                    packageId, includePrerelease: false, cancellationToken);
+                    packageId, includePrerelease: false, cancellationToken).ConfigureAwait(false);
                 var latestVersion = versions.FirstOrDefault();
                 if (latestVersion == null)
                 {
@@ -4453,7 +4453,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // 1. First check README file in package
             var downloadResult = await _nugetService.DownloadPackageAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             string? packagePath = downloadResult.IsSuccess ? downloadResult.Path : null;
 
@@ -4470,7 +4470,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
                         sb.AppendLine(new string('-', 60));
                         sb.AppendLine();
 
-                        var lines = await File.ReadAllLinesAsync(readmePath, cancellationToken);
+                        var lines = await File.ReadAllLinesAsync(readmePath, cancellationToken).ConfigureAwait(false);
                         var displayLines = maxLines > 0 ? Math.Min(maxLines, lines.Length) : lines.Length;
 
                         for (int i = 0; i < displayLines; i++)
@@ -4491,7 +4491,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // 2. Check source repository from package metadata
             var metadata = await _nugetService.GetPackageMetadataAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (metadata == null)
             {
@@ -4517,12 +4517,12 @@ public sealed partial class NuGetInspectorTool : IDisposable
             if (repoInfo.Type == RepositoryType.GitHub)
             {
                 readme = await _repoService.GetGitHubReadmeAsync(
-                    repoInfo.Owner, repoInfo.Name, cancellationToken);
+                    repoInfo.Owner, repoInfo.Name, cancellationToken).ConfigureAwait(false);
             }
             else if (repoInfo.Type == RepositoryType.GitLab)
             {
                 readme = await _repoService.GetGitLabReadmeAsync(
-                    repoInfo.Host, repoInfo.Owner, repoInfo.Name, cancellationToken);
+                    repoInfo.Host, repoInfo.Owner, repoInfo.Name, cancellationToken).ConfigureAwait(false);
             }
 
             if (readme == null || string.IsNullOrEmpty(readme.Content))
@@ -4588,7 +4588,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Get package metadata
             var metadata = await _nugetService.GetPackageMetadataAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (metadata == null)
             {
@@ -4625,7 +4625,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Get GitHub wiki info
             var wiki = await _repoService.GetGitHubWikiAsync(
-                repoInfo.Owner, repoInfo.Name, cancellationToken);
+                repoInfo.Owner, repoInfo.Name, cancellationToken).ConfigureAwait(false);
 
             if (wiki == null)
             {
@@ -4701,7 +4701,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
             // Get package metadata
             var metadata = await _nugetService.GetPackageMetadataAsync(
-                packageId, packageVersion, cancellationToken);
+                packageId, packageVersion, cancellationToken).ConfigureAwait(false);
 
             if (metadata == null)
             {
@@ -4744,7 +4744,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
                 // Check README
                 var readme = await _repoService.GetGitHubReadmeAsync(
-                    repoInfo.Owner, repoInfo.Name, cancellationToken);
+                    repoInfo.Owner, repoInfo.Name, cancellationToken).ConfigureAwait(false);
 
                 if (readme != null)
                 {
@@ -4759,7 +4759,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
 
                 // Check Wiki
                 var wiki = await _repoService.GetGitHubWikiAsync(
-                    repoInfo.Owner, repoInfo.Name, cancellationToken);
+                    repoInfo.Owner, repoInfo.Name, cancellationToken).ConfigureAwait(false);
 
                 if (wiki?.HasWiki == true)
                 {
@@ -4784,7 +4784,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
                 sb.AppendLine(Emoji.Books + " Available Resources:");
 
                 var readme = await _repoService.GetGitLabReadmeAsync(
-                    repoInfo.Host, repoInfo.Owner, repoInfo.Name, cancellationToken);
+                    repoInfo.Host, repoInfo.Owner, repoInfo.Name, cancellationToken).ConfigureAwait(false);
 
                 if (readme != null)
                 {
@@ -4833,7 +4833,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             }
 
             var vulnInfo = await _nugetService.GetPackageVulnerabilitiesAsync(
-                packageId, nugetVersion, cancellationToken);
+                packageId, nugetVersion, cancellationToken).ConfigureAwait(false);
 
             if (vulnInfo == null)
             {
@@ -4941,7 +4941,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             }
             else
             {
-                var versions = await _nugetService.GetPackageVersionsAsync(packageId, true, cancellationToken);
+                var versions = await _nugetService.GetPackageVersionsAsync(packageId, true, cancellationToken).ConfigureAwait(false);
                 nugetVersion = versions.FirstOrDefault();
                 if (nugetVersion == null)
                 {
@@ -4949,7 +4949,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
                 }
             }
 
-            var downloadResult = await _nugetService.DownloadPackageAsync(packageId, nugetVersion, cancellationToken);
+            var downloadResult = await _nugetService.DownloadPackageAsync(packageId, nugetVersion, cancellationToken).ConfigureAwait(false);
             if (!downloadResult.IsSuccess)
             {
                 return $"Failed to download package: {packageId} {nugetVersion}\n{downloadResult.Error}";
@@ -5201,7 +5201,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             }
             else
             {
-                var versions = await _nugetService.GetPackageVersionsAsync(packageId, true, cancellationToken);
+                var versions = await _nugetService.GetPackageVersionsAsync(packageId, true, cancellationToken).ConfigureAwait(false);
                 nugetVersion = versions.FirstOrDefault();
                 if (nugetVersion == null)
                 {
@@ -5209,7 +5209,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
                 }
             }
 
-            var downloadResult = await _nugetService.DownloadPackageAsync(packageId, nugetVersion, cancellationToken);
+            var downloadResult = await _nugetService.DownloadPackageAsync(packageId, nugetVersion, cancellationToken).ConfigureAwait(false);
             if (!downloadResult.IsSuccess)
             {
                 return $"Failed to download package: {packageId} {nugetVersion} {downloadResult.Error}";
@@ -5305,7 +5305,7 @@ public sealed partial class NuGetInspectorTool : IDisposable
             // Read file content
             using var stream = entry.Open();
             using var reader = new StreamReader(stream);
-            var content = await reader.ReadToEndAsync(cancellationToken);
+            var content = await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
 
             var result = new StringBuilder();
             result.AppendLine(Emoji.File + $" {entry.FullName}");

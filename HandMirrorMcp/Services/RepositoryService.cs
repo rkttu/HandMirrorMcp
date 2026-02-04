@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -93,14 +93,14 @@ public sealed class RepositoryService : IDisposable
         {
             // Get README info via GitHub API
             var apiUrl = $"https://api.github.com/repos/{owner}/{repo}/readme";
-            var response = await _httpClient.GetAsync(apiUrl, cancellationToken);
+            var response = await _httpClient.GetAsync(apiUrl, cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
                 return null;
             }
 
-            var readmeInfo = await response.Content.ReadFromJsonAsync<GitHubReadmeResponse>(cancellationToken: cancellationToken);
+            var readmeInfo = await response.Content.ReadFromJsonAsync<GitHubReadmeResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (readmeInfo == null)
                 return null;
@@ -109,10 +109,10 @@ public sealed class RepositoryService : IDisposable
             string? content = null;
             if (!string.IsNullOrEmpty(readmeInfo.DownloadUrl))
             {
-                var contentResponse = await _httpClient.GetAsync(readmeInfo.DownloadUrl, cancellationToken);
+                var contentResponse = await _httpClient.GetAsync(readmeInfo.DownloadUrl, cancellationToken).ConfigureAwait(false);
                 if (contentResponse.IsSuccessStatusCode)
                 {
-                    content = await contentResponse.Content.ReadAsStringAsync(cancellationToken);
+                    content = await contentResponse.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                 }
             }
 
@@ -141,19 +141,19 @@ public sealed class RepositoryService : IDisposable
             var projectPath = Uri.EscapeDataString($"{owner}/{repo}");
             var apiUrl = $"https://{host}/api/v4/projects/{projectPath}/repository/files/README.md?ref=main";
 
-            var response = await _httpClient.GetAsync(apiUrl, cancellationToken);
+            var response = await _httpClient.GetAsync(apiUrl, cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
                 // If main branch not found, try master
                 apiUrl = $"https://{host}/api/v4/projects/{projectPath}/repository/files/README.md?ref=master";
-                response = await _httpClient.GetAsync(apiUrl, cancellationToken);
+                response = await _httpClient.GetAsync(apiUrl, cancellationToken).ConfigureAwait(false);
 
                 if (!response.IsSuccessStatusCode)
                     return null;
             }
 
-            var fileInfo = await response.Content.ReadFromJsonAsync<GitLabFileResponse>(cancellationToken: cancellationToken);
+            var fileInfo = await response.Content.ReadFromJsonAsync<GitLabFileResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (fileInfo == null)
                 return null;
@@ -190,12 +190,12 @@ public sealed class RepositoryService : IDisposable
         {
             // Check wiki existence via repository info
             var repoUrl = $"https://api.github.com/repos/{owner}/{repo}";
-            var repoResponse = await _httpClient.GetAsync(repoUrl, cancellationToken);
+            var repoResponse = await _httpClient.GetAsync(repoUrl, cancellationToken).ConfigureAwait(false);
 
             if (!repoResponse.IsSuccessStatusCode)
                 return null;
 
-            var repoInfo = await repoResponse.Content.ReadFromJsonAsync<GitHubRepoResponse>(cancellationToken: cancellationToken);
+            var repoInfo = await repoResponse.Content.ReadFromJsonAsync<GitHubRepoResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (repoInfo?.HasWiki != true)
             {
@@ -221,10 +221,10 @@ public sealed class RepositoryService : IDisposable
             // Try to extract page list from wiki sidebar
             try
             {
-                var wikiResponse = await _httpClient.GetAsync(wikiUrl, cancellationToken);
+                var wikiResponse = await _httpClient.GetAsync(wikiUrl, cancellationToken).ConfigureAwait(false);
                 if (wikiResponse.IsSuccessStatusCode)
                 {
-                    var html = await wikiResponse.Content.ReadAsStringAsync(cancellationToken);
+                    var html = await wikiResponse.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                     pages = ExtractWikiPagesFromHtml(html, owner, repo);
                 }
             }
@@ -316,14 +316,14 @@ public sealed class RepositoryService : IDisposable
         try
         {
             var apiUrl = $"https://api.github.com/repos/{owner}/{repo}/releases?per_page={maxResults}";
-            var response = await _httpClient.GetAsync(apiUrl, cancellationToken);
+            var response = await _httpClient.GetAsync(apiUrl, cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode)
             {
                 return null;
             }
 
-            var releases = await response.Content.ReadFromJsonAsync<List<GitHubReleaseResponse>>(cancellationToken: cancellationToken);
+            var releases = await response.Content.ReadFromJsonAsync<List<GitHubReleaseResponse>>(cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (releases == null || releases.Count == 0)
             {

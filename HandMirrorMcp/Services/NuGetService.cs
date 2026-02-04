@@ -261,7 +261,7 @@ public sealed class NuGetService : IDisposable
             try
             {
                 var repository = Repository.Factory.GetCoreV3(source);
-                var searchResource = await repository.GetResourceAsync<PackageSearchResource>(cancellationToken);
+                var searchResource = await repository.GetResourceAsync<PackageSearchResource>(cancellationToken).ConfigureAwait(false);
 
                 if (searchResource != null)
                 {
@@ -272,7 +272,7 @@ public sealed class NuGetService : IDisposable
                         skip,
                         take,
                         _logger,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
 
                     results.AddRange(packages);
                 }
@@ -301,7 +301,7 @@ public sealed class NuGetService : IDisposable
             try
             {
                 var repository = Repository.Factory.GetCoreV3(source);
-                var findResource = await repository.GetResourceAsync<FindPackageByIdResource>(cancellationToken);
+                var findResource = await repository.GetResourceAsync<FindPackageByIdResource>(cancellationToken).ConfigureAwait(false);
 
                 if (findResource != null)
                 {
@@ -309,7 +309,7 @@ public sealed class NuGetService : IDisposable
                         packageId,
                         _cacheContext,
                         _logger,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
 
                     versions.AddRange(allVersions);
                 }
@@ -337,7 +337,7 @@ public sealed class NuGetService : IDisposable
             try
             {
                 var repository = Repository.Factory.GetCoreV3(source);
-                var metadataResource = await repository.GetResourceAsync<PackageMetadataResource>(cancellationToken);
+                var metadataResource = await repository.GetResourceAsync<PackageMetadataResource>(cancellationToken).ConfigureAwait(false);
 
                 if (metadataResource != null)
                 {
@@ -347,7 +347,7 @@ public sealed class NuGetService : IDisposable
                         includeUnlisted: false,
                         _cacheContext,
                         _logger,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
 
                     var metadataList = metadata.ToList();
 
@@ -411,7 +411,7 @@ public sealed class NuGetService : IDisposable
                 var repository = Repository.Factory.GetCoreV3(source);
                 
                 // Try DownloadResource first (preferred method)
-                var downloadResource = await repository.GetResourceAsync<DownloadResource>(cancellationToken);
+                var downloadResource = await repository.GetResourceAsync<DownloadResource>(cancellationToken).ConfigureAwait(false);
                 
                 if (downloadResource != null)
                 {
@@ -423,7 +423,7 @@ public sealed class NuGetService : IDisposable
                         downloadContext,
                         globalPackagesFolder: _cacheDirectory,
                         _logger,
-                        cancellationToken);
+                        cancellationToken).ConfigureAwait(false);
                     
                     if (downloadResult.Status == DownloadResourceResultStatus.Available ||
                         downloadResult.Status == DownloadResourceResultStatus.AvailableWithoutStream)
@@ -434,12 +434,12 @@ public sealed class NuGetService : IDisposable
                             var fileStream = new FileStream(nupkgPath, FileMode.Create, FileAccess.Write);
                             try
                             {
-                                await downloadResult.PackageStream.CopyToAsync(fileStream, cancellationToken);
-                                await fileStream.FlushAsync(cancellationToken);
+                                await downloadResult.PackageStream.CopyToAsync(fileStream, cancellationToken).ConfigureAwait(false);
+                                await fileStream.FlushAsync(cancellationToken).ConfigureAwait(false);
                             }
                             finally
                             {
-                                await fileStream.DisposeAsync();
+                                await fileStream.DisposeAsync().ConfigureAwait(false);
                             }
                         }
                         else if (downloadResult.PackageReader != null)
@@ -461,7 +461,7 @@ public sealed class NuGetService : IDisposable
                         // Verify and extract
                         if (File.Exists(nupkgPath) && IsValidNupkg(nupkgPath))
                         {
-                            await ExtractPackageAsync(nupkgPath, packagePath, cancellationToken);
+                            await ExtractPackageAsync(nupkgPath, packagePath, cancellationToken).ConfigureAwait(false);
                             return DownloadResult.Success(packagePath);
                         }
                         else if (downloadResult.PackageReader != null)
@@ -469,13 +469,13 @@ public sealed class NuGetService : IDisposable
                             // Use PackageReader to extract directly
                             // First read all content into memory to avoid file locking issues on Linux
                             var entries = new List<(string RelativePath, byte[] Content)>();
-                            var files = await downloadResult.PackageReader.GetFilesAsync(cancellationToken);
+                            var files = await downloadResult.PackageReader.GetFilesAsync(cancellationToken).ConfigureAwait(false);
                             
                             foreach (var file in files)
                             {
-                                using var entryStream = await downloadResult.PackageReader.GetStreamAsync(file, cancellationToken);
+                                using var entryStream = await downloadResult.PackageReader.GetStreamAsync(file, cancellationToken).ConfigureAwait(false);
                                 using var memoryStream = new MemoryStream();
-                                await entryStream.CopyToAsync(memoryStream, cancellationToken);
+                                await entryStream.CopyToAsync(memoryStream, cancellationToken).ConfigureAwait(false);
                                 entries.Add((file, memoryStream.ToArray()));
                             }
                             
@@ -486,7 +486,7 @@ public sealed class NuGetService : IDisposable
                                 var targetDir = Path.GetDirectoryName(targetFile);
                                 if (targetDir != null) Directory.CreateDirectory(targetDir);
                                 
-                                await File.WriteAllBytesAsync(targetFile, content, cancellationToken);
+                                await File.WriteAllBytesAsync(targetFile, content, cancellationToken).ConfigureAwait(false);
                             }
                             
                             // Create a marker to indicate package is extracted
@@ -515,7 +515,7 @@ public sealed class NuGetService : IDisposable
                 else
                 {
                     // Fallback to FindPackageByIdResource
-                    var findResource = await repository.GetResourceAsync<FindPackageByIdResource>(cancellationToken);
+                    var findResource = await repository.GetResourceAsync<FindPackageByIdResource>(cancellationToken).ConfigureAwait(false);
                     
                     if (findResource != null)
                     {
@@ -529,25 +529,25 @@ public sealed class NuGetService : IDisposable
                                 packageStream,
                                 _cacheContext,
                                 _logger,
-                                cancellationToken);
+                                cancellationToken).ConfigureAwait(false);
 
-                            await packageStream.FlushAsync(cancellationToken);
+                            await packageStream.FlushAsync(cancellationToken).ConfigureAwait(false);
                         }
                         finally
                         {
-                            await packageStream.DisposeAsync();
+                            await packageStream.DisposeAsync().ConfigureAwait(false);
                         }
 
                         if (success && File.Exists(nupkgPath) && new FileInfo(nupkgPath).Length > 0)
                         {
                             if (IsValidNupkg(nupkgPath))
                             {
-                                await ExtractPackageAsync(nupkgPath, packagePath, cancellationToken);
+                                await ExtractPackageAsync(nupkgPath, packagePath, cancellationToken).ConfigureAwait(false);
                                 return DownloadResult.Success(packagePath);
                             }
                             else
                             {
-                                var firstBytes = await ReadFirstBytesAsync(nupkgPath, 100);
+                                var firstBytes = await ReadFirstBytesAsync(nupkgPath, 100).ConfigureAwait(false);
                                 errors.Add($"[{source.Name}] Downloaded file is not a valid nupkg. {firstBytes}");
                                 try { File.Delete(nupkgPath); } catch { }
                             }
@@ -617,7 +617,7 @@ public sealed class NuGetService : IDisposable
         {
             var bytes = new byte[count];
             await using var stream = File.OpenRead(filePath);
-            var bytesRead = await stream.ReadAsync(bytes.AsMemory(0, count));
+            var bytesRead = await stream.ReadAsync(bytes.AsMemory(0, count)).ConfigureAwait(false);
             
             // Try to interpret as text first
             var text = System.Text.Encoding.UTF8.GetString(bytes, 0, bytesRead);
@@ -664,7 +664,7 @@ public sealed class NuGetService : IDisposable
 
                 using var entryStream = entry.Open();
                 using var memoryStream = new MemoryStream();
-                await entryStream.CopyToAsync(memoryStream, cancellationToken);
+                await entryStream.CopyToAsync(memoryStream, cancellationToken).ConfigureAwait(false);
                 entries.Add((entry.FullName, memoryStream.ToArray()));
             }
         }
@@ -680,7 +680,7 @@ public sealed class NuGetService : IDisposable
                 Directory.CreateDirectory(directory);
             }
 
-            await File.WriteAllBytesAsync(filePath, content, cancellationToken);
+            await File.WriteAllBytesAsync(filePath, content, cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -698,7 +698,7 @@ public sealed class NuGetService : IDisposable
 
         using var packageReader = new PackageArchiveReader(nupkgPath);
 
-        var libItems = await packageReader.GetLibItemsAsync(cancellationToken);
+        var libItems = await packageReader.GetLibItemsAsync(cancellationToken).ConfigureAwait(false);
         var libItemsList = libItems.ToList();
 
         if (libItemsList.Count == 0)
@@ -741,7 +741,7 @@ public sealed class NuGetService : IDisposable
         using var packageReader = new PackageArchiveReader(nupkgPath);
 
         // Assemblies in lib/ folder (by TFM)
-        var libItems = await packageReader.GetLibItemsAsync(cancellationToken);
+        var libItems = await packageReader.GetLibItemsAsync(cancellationToken).ConfigureAwait(false);
         foreach (var group in libItems)
         {
             var tfm = group.TargetFramework.GetShortFolderName();
@@ -757,7 +757,7 @@ public sealed class NuGetService : IDisposable
         }
 
         // Assemblies in runtimes/ folder (by RID)
-        var files = await packageReader.GetFilesAsync(cancellationToken);
+        var files = await packageReader.GetFilesAsync(cancellationToken).ConfigureAwait(false);
         var runtimeFiles = files
             .Where(f => f.StartsWith("runtimes/", StringComparison.OrdinalIgnoreCase) &&
                         f.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
@@ -795,7 +795,7 @@ public sealed class NuGetService : IDisposable
         }
 
         // Reference assemblies in ref/ folder
-        var refItems = await packageReader.GetItemsAsync("ref", cancellationToken);
+        var refItems = await packageReader.GetItemsAsync("ref", cancellationToken).ConfigureAwait(false);
         foreach (var group in refItems)
         {
             var tfm = group.TargetFramework.GetShortFolderName();
@@ -852,7 +852,7 @@ public sealed class NuGetService : IDisposable
         try
         {
             var repository = Repository.Factory.GetCoreV3(nugetOrgSource);
-            var metadataResource = await repository.GetResourceAsync<PackageMetadataResource>(cancellationToken);
+            var metadataResource = await repository.GetResourceAsync<PackageMetadataResource>(cancellationToken).ConfigureAwait(false);
 
             if (metadataResource == null)
             {
