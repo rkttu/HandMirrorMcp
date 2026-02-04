@@ -11,8 +11,10 @@ on:
       - master
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '9.0.x'
+  SOLUTION_PATH: 'HandMirrorMcp.slnx'
   PROJECT_PATH: 'HandMirrorMcp/HandMirrorMcp.csproj'
+  DOTNET_CLI_TESTINGPLATFORM_ENABLE: 'true'
 
 jobs:
   build-and-test:
@@ -28,20 +30,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ${{ env.SOLUTION_PATH }}
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test --configuration Release --no-build --verbosity normal --logger trx --results-directory TestResults
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: test-results
-          path: TestResults/*.trx
+        run: dotnet test --solution ${{ env.SOLUTION_PATH }} --configuration Release --no-build --verbosity normal
 
       - name: Pack NuGet package
         run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ./nupkg

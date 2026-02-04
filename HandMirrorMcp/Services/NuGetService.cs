@@ -431,8 +431,16 @@ public sealed class NuGetService : IDisposable
                         // Copy to our cache location
                         if (downloadResult.PackageStream != null)
                         {
-                            await using var fileStream = new FileStream(nupkgPath, FileMode.Create, FileAccess.Write);
-                            await downloadResult.PackageStream.CopyToAsync(fileStream, cancellationToken);
+                            var fileStream = new FileStream(nupkgPath, FileMode.Create, FileAccess.Write);
+                            try
+                            {
+                                await downloadResult.PackageStream.CopyToAsync(fileStream, cancellationToken);
+                                await fileStream.FlushAsync(cancellationToken);
+                            }
+                            finally
+                            {
+                                await fileStream.DisposeAsync();
+                            }
                         }
                         else if (downloadResult.PackageReader != null)
                         {
@@ -459,16 +467,26 @@ public sealed class NuGetService : IDisposable
                         else if (downloadResult.PackageReader != null)
                         {
                             // Use PackageReader to extract directly
+                            // First read all content into memory to avoid file locking issues on Linux
+                            var entries = new List<(string RelativePath, byte[] Content)>();
                             var files = await downloadResult.PackageReader.GetFilesAsync(cancellationToken);
+                            
                             foreach (var file in files)
                             {
-                                var targetFile = Path.Combine(packagePath, file);
+                                using var entryStream = await downloadResult.PackageReader.GetStreamAsync(file, cancellationToken);
+                                using var memoryStream = new MemoryStream();
+                                await entryStream.CopyToAsync(memoryStream, cancellationToken);
+                                entries.Add((file, memoryStream.ToArray()));
+                            }
+                            
+                            // Now write all files to disk
+                            foreach (var (relativePath, content) in entries)
+                            {
+                                var targetFile = Path.Combine(packagePath, relativePath);
                                 var targetDir = Path.GetDirectoryName(targetFile);
                                 if (targetDir != null) Directory.CreateDirectory(targetDir);
                                 
-                                using var entryStream = await downloadResult.PackageReader.GetStreamAsync(file, cancellationToken);
-                                await using var targetStream = File.Create(targetFile);
-                                await entryStream.CopyToAsync(targetStream, cancellationToken);
+                                await File.WriteAllBytesAsync(targetFile, content, cancellationToken);
                             }
                             
                             // Create a marker to indicate package is extracted
@@ -501,17 +519,24 @@ public sealed class NuGetService : IDisposable
                     
                     if (findResource != null)
                     {
-                        await using var packageStream = new FileStream(nupkgPath, FileMode.Create, FileAccess.Write);
-                        var success = await findResource.CopyNupkgToStreamAsync(
-                            packageId,
-                            version,
-                            packageStream,
-                            _cacheContext,
-                            _logger,
-                            cancellationToken);
+                        bool success;
+                        var packageStream = new FileStream(nupkgPath, FileMode.Create, FileAccess.Write);
+                        try
+                        {
+                            success = await findResource.CopyNupkgToStreamAsync(
+                                packageId,
+                                version,
+                                packageStream,
+                                _cacheContext,
+                                _logger,
+                                cancellationToken);
 
-                        await packageStream.FlushAsync(cancellationToken);
-                        packageStream.Close();
+                            await packageStream.FlushAsync(cancellationToken);
+                        }
+                        finally
+                        {
+                            await packageStream.DisposeAsync();
+                        }
 
                         if (success && File.Exists(nupkgPath) && new FileInfo(nupkgPath).Length > 0)
                         {
@@ -600,7 +625,7 @@ public sealed class NuGetService : IDisposable
             {
                 return $"HTML response detected: {text[..Math.Min(50, text.Length)]}...";
             }
-            if (text.StartsWith("{") || text.StartsWith("["))
+            if (text.StartsWith('{') || text.StartsWith('/'))
             {
                 return $"JSON response: {text[..Math.Min(50, text.Length)]}...";
             }
@@ -625,13 +650,29 @@ public sealed class NuGetService : IDisposable
     /// </summary>
     private static async Task ExtractPackageAsync(string nupkgPath, string targetPath, CancellationToken cancellationToken)
     {
-        using var packageReader = new PackageArchiveReader(nupkgPath);
+        // Use ZipFile to avoid file locking issues on Linux
+        // First, read all entries into memory, then write them to disk
+        var entries = new List<(string RelativePath, byte[] Content)>();
 
-        var files = await packageReader.GetFilesAsync(cancellationToken);
-
-        foreach (var file in files)
+        using (var archive = ZipFile.OpenRead(nupkgPath))
         {
-            var filePath = Path.Combine(targetPath, file);
+            foreach (var entry in archive.Entries)
+            {
+                // Skip directories
+                if (string.IsNullOrEmpty(entry.Name))
+                    continue;
+
+                using var entryStream = entry.Open();
+                using var memoryStream = new MemoryStream();
+                await entryStream.CopyToAsync(memoryStream, cancellationToken);
+                entries.Add((entry.FullName, memoryStream.ToArray()));
+            }
+        }
+
+        // Now write all files to disk (archive is closed, no file locking)
+        foreach (var (relativePath, content) in entries)
+        {
+            var filePath = Path.Combine(targetPath, relativePath);
             var directory = Path.GetDirectoryName(filePath);
 
             if (directory != null)
@@ -639,9 +680,7 @@ public sealed class NuGetService : IDisposable
                 Directory.CreateDirectory(directory);
             }
 
-            await using var fileStream = File.Create(filePath);
-            await using var entryStream = await packageReader.GetStreamAsync(file, cancellationToken);
-            await entryStream.CopyToAsync(fileStream, cancellationToken);
+            await File.WriteAllBytesAsync(filePath, content, cancellationToken);
         }
     }
 
@@ -662,7 +701,7 @@ public sealed class NuGetService : IDisposable
         var libItems = await packageReader.GetLibItemsAsync(cancellationToken);
         var libItemsList = libItems.ToList();
 
-        if (!libItemsList.Any())
+        if (libItemsList.Count == 0)
             return [];
 
         // Select target framework
@@ -745,12 +784,13 @@ public sealed class NuGetService : IDisposable
                     key = $"{rid}/native";
                 }
 
-                if (!result.RuntimeAssemblies.ContainsKey(key))
+                if (!result.RuntimeAssemblies.TryGetValue(key, out List<string>? value))
                 {
-                    result.RuntimeAssemblies[key] = [];
+                    value = [];
+                    result.RuntimeAssemblies[key] = value;
                 }
 
-                result.RuntimeAssemblies[key].Add(Path.Combine(packagePath, file));
+                value.Add(Path.Combine(packagePath, file));
             }
         }
 
@@ -943,6 +983,48 @@ public sealed class DownloadResult
     public static DownloadResult Success(string path) => new(true, path, null);
     public static DownloadResult Failure(string error) => new(false, null, error);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
