@@ -8,8 +8,10 @@
   <a href="https://github.com/rkttu/HandMirrorMcp/issues"><img src="https://img.shields.io/github/issues/rkttu/HandMirrorMcp?style=flat-square" alt="GitHub Issues" /></a>
   <a href="https://www.nuget.org/packages/HandMirrorMcp"><img src="https://img.shields.io/nuget/v/HandMirrorMcp?style=flat-square" alt="NuGet Version" /></a>
   <a href="https://www.nuget.org/packages/HandMirrorMcp"><img src="https://img.shields.io/nuget/dt/HandMirrorMcp?style=flat-square" alt="NuGet Downloads" /></a>
-  <a href="https://github.com/rkttu/HandMirrorMcp/actions/workflows/publish-nuget.yml"><img src="https://img.shields.io/github/actions/workflow/status/rkttu/HandMirrorMcp/publish-nuget.yml?style=flat-square&label=CI%2FCD" alt="CI/CD Status" /></a>
+  <a href="https://github.com/rkttu/HandMirrorMcp/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/rkttu/HandMirrorMcp/ci.yml?style=flat-square&label=CI" alt="CI Status" /></a>
+  <a href="https://github.com/rkttu/HandMirrorMcp/actions/workflows/publish-nuget.yml"><img src="https://img.shields.io/github/actions/workflow/status/rkttu/HandMirrorMcp/publish-nuget.yml?style=flat-square&label=CD" alt="CD Status" /></a>
   <a href="https://github.com/rkttu/HandMirrorMcp/blob/master/LICENSE"><img src="https://img.shields.io/github/license/rkttu/HandMirrorMcp?style=flat-square" alt="License" /></a>
+  <a href="https://github.com/sponsors/rkttu"><img src="https://img.shields.io/github/sponsors/rkttu?style=flat-square&label=Sponsors" alt="GitHub Sponsors" /></a>
 </p>
 
 # HandMirror MCP Server
@@ -228,6 +230,18 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 - [Model Context Protocol](https://modelcontextprotocol.io/) for the MCP specification
 - [Mono.Cecil](https://github.com/jbevain/cecil) for .NET assembly inspection capabilities
 - The .NET community for continuous inspiration
+
+## 💖 Support This Project
+
+If you find HandMirror helpful in your development workflow, please consider supporting the project!
+
+<p align="center">
+  <a href="https://github.com/sponsors/rkttu">
+    <img src="https://img.shields.io/badge/Sponsor-❤️-ea4aaa?style=for-the-badge&logo=github" alt="Sponsor on GitHub" />
+  </a>
+</p>
+
+Your sponsorship helps maintain and improve this project, add new features, and keep it free for everyone. Every contribution, no matter how small, is greatly appreciated! ⭐
 
 ---
 
