@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".vscode/mcp.json" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="HandMirrorMcp.Tests/HandMirrorMcp.Tests.csproj" />
+  <Project Path="HandMirrorMcp.UnitTests/HandMirrorMcp.UnitTests.csproj" />
+  <Project Path="HandMirrorMcp/HandMirrorMcp.csproj" />
+</Solution>

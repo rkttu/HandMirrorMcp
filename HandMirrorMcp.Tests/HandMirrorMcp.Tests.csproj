@@ -1,0 +1,18 @@
+﻿<Project Sdk="MSTest.Sdk/4.1.0">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ModelContextProtocol" Version="0.7.0-preview.1" />
+		<PackageReference Include="Mono.Cecil" Version="0.11.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+	</ItemGroup>
+
+</Project>

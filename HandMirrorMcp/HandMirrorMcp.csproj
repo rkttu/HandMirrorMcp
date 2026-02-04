@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Version>0.1.0</Version>
+
+		<!-- .NET Tool Configuration -->
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>handmirror</ToolCommandName>
+
+		<!-- NuGet Package Metadata -->
+		<PackageId>HandMirrorMcp</PackageId>
+		<PackageType>McpServer</PackageType>
+		<Title>HandMirror MCP Server</Title>
+		<Description>A Model Context Protocol (MCP) server for .NET assembly and NuGet package inspection. Helps AI coding agents understand .NET APIs accurately and resolve build errors.</Description>
+		<Authors>HandMirror Contributors</Authors>
+		<PackageTags>mcp;model-context-protocol;dotnet;nuget;assembly;inspection;ai;copilot</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/rkttu/HandMirrorMcp</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/rkttu/HandMirrorMcp</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageIcon>HandMirrorMcp.png</PackageIcon>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<ApplicationIcon>HandMirrorMcp.ico</ApplicationIcon>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include=".mcp\server.json" />
+		<Content Include="HandMirrorMcp.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Link="README.md" Pack="true" PackagePath="\" />
+		<None Include="..\HandMirrorMcp.png" Link="HandMirrorMcp.png" Pack="true" PackagePath="\" />
+		<None Include=".mcp\server.json" Pack="true" PackagePath=".mcp\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ModelContextProtocol" Version="0.7.0-preview.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+		<PackageReference Include="Mono.Cecil" Version="0.11.6" />
+		<PackageReference Include="NuGet.Protocol" Version="7.0.1" />
+	</ItemGroup>
+
+</Project>

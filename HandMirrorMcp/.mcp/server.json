@@ -1,0 +1,7 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/draft/2025-07-09/server.json",
+  "name": "HandMirrorMcp",
+  "description": "A Model Context Protocol (MCP) server for .NET assembly and NuGet package inspection. Helps AI coding agents understand .NET APIs accurately and resolve build errors.",
+  "repository": "https://github.com/yourusername/HandMirrorMcp",
+  "license": "Apache-2.0"
+}
